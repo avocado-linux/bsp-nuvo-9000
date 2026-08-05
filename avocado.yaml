@@ -9,8 +9,9 @@ extensions:
     summary: Board support for the Neousys Nuvo-9000 industrial PC
     description: >
       Standalone board support for the Neousys Nuvo-9000 series industrial PC
-      (Intel Core i9-14900 / x86-64-v3) with an NVIDIA RTX 4000 SFF Ada discrete
-      GPU. Self-contained: it does not depend on avocado-bsp-intel-x86-64-v3.
+      (Intel Core i9-14900 / x86-64-v3) with a discrete NVIDIA GPU. The chassis
+      takes any RTX 40- or 50-series card, so the driver stack covers both.
+      Self-contained: it does not depend on avocado-bsp-intel-x86-64-v3.
       Bundles the generic Intel x86-64-v3 support (CPU microcode, networking,
       WiFi/BT, audio, USB serial, container netfilter, common tools) plus the
       hardware specific to this box: the NVIDIA discrete-GPU driver stack, the
@@ -40,7 +41,7 @@ extensions:
     packages:
       # ================= Neousys Nuvo-9000 specific =================
 
-      # --- NVIDIA discrete GPU driver (RTX 4000 SFF Ada): open kernel modules,
+      # --- NVIDIA discrete GPU driver (RTX 40-/50-series): open kernel modules,
       #     libcuda, nvidia-smi, GSP firmware ---
       packagegroup-avocado-nvidia-gpu: '*'
 

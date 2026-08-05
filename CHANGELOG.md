@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Initial release: standalone board support for the Neousys Nuvo-9000 industrial
-  PC (Intel i9-14900 / x86-64-v3 + NVIDIA RTX 4000 SFF Ada). Self-contained; does
-  not depend on avocado-bsp-intel-x86-64-v3.
+  PC (Intel i9-14900 / x86-64-v3 + a discrete NVIDIA RTX 40-/50-series GPU).
+  Self-contained; does not depend on avocado-bsp-intel-x86-64-v3.
 - NVIDIA discrete-GPU driver stack, Intel I226 2.5GbE (igc), Wi-Fi regulatory
   database, VT console getty, and masks for benign spurious boot failures plus a
   `networkd-wait-online --any` drop-in for the 6-NIC layout.
