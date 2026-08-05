@@ -1,0 +1,140 @@
+default_target: intel-x86-64-v3
+supported_targets:
+  - intel-x86-64-v3
+
+extensions:
+  avocado-bsp-nuvo-9000:
+    version: 0.1.0
+    release: r0
+    summary: Board support for the Neousys Nuvo-9000 industrial PC
+    description: >
+      Standalone board support for the Neousys Nuvo-9000 series industrial PC
+      (Intel Core i9-14900 / x86-64-v3) with a discrete NVIDIA GPU. The chassis
+      takes any RTX 40- or 50-series card, so the driver stack covers both.
+      Self-contained: it does not depend on avocado-bsp-intel-x86-64-v3.
+      Bundles the generic Intel x86-64-v3 support (CPU microcode, networking,
+      WiFi/BT, audio, USB serial, container netfilter, common tools) plus the
+      hardware specific to this box: the NVIDIA discrete-GPU driver stack, the
+      5x Intel I226-IT 2.5GbE ports (igc), the Wi-Fi regulatory database, a
+      console getty on the VT, and fixes for two benign spurious boot failures.
+    license: Apache-2.0
+    url: https://github.com/avocado-linux/bsp-nuvo-9000
+    vendor: Avocado Linux <info@avocadolinux.org>
+
+    types:
+      - sysext
+      - confext
+
+    on_merge:
+      - udevadm control --reload
+      - udevadm trigger --type=subsystems --action=add --settle
+      - udevadm trigger --type=devices --action=add --settle
+
+    # Console getty (base enables only serial-getty@ttyS0), masks for two benign
+    # spurious failures, and a networkd-wait-online --any drop-in (6 NICs).
+    overlay: overlay
+
+    # The 2.5GbE ports load on PCI match, but load igc explicitly to be safe.
+    modprobe:
+      - igc
+
+    packages:
+      # ================= Neousys Nuvo-9000 specific =================
+
+      # --- NVIDIA discrete GPU driver (RTX 40-/50-series): open kernel modules,
+      #     libcuda, nvidia-smi, GSP firmware ---
+      packagegroup-avocado-nvidia-gpu: '*'
+
+      # --- Intel I226-IT 2.5GbE ports (5x on this box) ---
+      kernel-module-igc: '*'
+
+      # --- Wi-Fi regulatory database (AX210) ---
+      wireless-regdb: '*'
+
+      # ================= Generic Intel x86-64-v3 support =================
+
+      # --- Intel CPU microcode ---
+      intel-microcode: '*'
+
+      # --- Intel GPU firmware ---
+      linux-firmware-i915: '*'
+
+      # --- WiFi firmware ---
+      linux-firmware-iwlwifi: '*'
+      linux-firmware-ath10k: '*'
+      linux-firmware-ath11k: '*'
+      linux-firmware-rtl8192ce: '*'
+      linux-firmware-rtl8192cu: '*'
+      linux-firmware-rtl8723: '*'
+      linux-firmware-rtl8821: '*'
+
+      # --- Ethernet drivers (Intel) ---
+      kernel-module-e1000e: '*'
+      kernel-module-igb: '*'
+      kernel-module-ixgbe: '*'
+
+      # --- Ethernet drivers (Realtek) ---
+      kernel-module-r8169: '*'
+
+      # --- WiFi stack ---
+      kernel-module-cfg80211: '*'
+      kernel-module-mac80211: '*'
+      kernel-module-rfkill: '*'
+      kernel-module-iwlwifi: '*'
+      kernel-module-iwlmvm: '*'
+      kernel-module-ccm: '*'
+      kernel-module-ctr: '*'
+
+      # --- Bluetooth (Intel) ---
+      kernel-module-bluetooth: '*'
+      kernel-module-btusb: '*'
+      kernel-module-btintel: '*'
+
+      # --- Audio (Intel HD Audio) ---
+      kernel-module-snd-hda-intel: '*'
+      kernel-module-snd-hda-codec-hdmi: '*'
+      kernel-module-snd-hda-codec-realtek: '*'
+
+      # --- Intel GPU driver (iGPU) ---
+      kernel-module-i915: '*'
+
+      # --- USB serial adapters ---
+      kernel-module-usbserial: '*'
+      kernel-module-ftdi-sio: '*'
+      kernel-module-pl2303: '*'
+      kernel-module-cp210x: '*'
+      kernel-module-ch341: '*'
+
+      # --- Network filtering (container support) ---
+      kernel-module-ip-tables: '*'
+      kernel-module-iptable-filter: '*'
+      kernel-module-iptable-nat: '*'
+      kernel-module-nf-nat: '*'
+      kernel-module-nf-conntrack: '*'
+      kernel-module-x-tables: '*'
+      kernel-module-xt-conntrack: '*'
+      kernel-module-xt-masquerade: '*'
+
+      # --- Filesystem ---
+      kernel-module-fuse: '*'
+
+      # --- Networking ---
+      kernel-module-sch-fq-codel: '*'
+      kernel-module-wireguard: '*'
+      kernel-module-tun: '*'
+      kernel-module-bridge: '*'
+
+      # --- Hardware monitoring ---
+      kernel-module-coretemp: '*'
+
+      # --- Userspace tools ---
+      swupdate: '*'
+      efibootmgr: '*'
+      tpm2-tools: '*'
+      pciutils: '*'
+      dmidecode: '*'
+      nvme-cli: '*'
+      smartmontools: '*'
+
+sdk:
+  image: docker.io/avocadolinux/sdk:{{ env.AVOCADO_DISTRO_RELEASE }}

@@ -1,7 +1,8 @@
 # bsp-nuvo-9000
 
 > Standalone board support for the Neousys Nuvo-9000 industrial PC (Intel Core
-> i9-14900 / x86-64-v3) with an NVIDIA RTX 4000 SFF Ada discrete GPU.
+> i9-14900 / x86-64-v3) with a discrete NVIDIA GPU. The chassis takes any RTX
+> 40- or 50-series card, so the driver stack covers both.
 
 This extension is **self-contained** — it does not depend on
 `avocado-bsp-intel-x86-64-v3`. It bundles the generic Intel x86-64-v3 support
