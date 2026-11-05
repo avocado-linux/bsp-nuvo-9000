@@ -4,7 +4,7 @@ supported_targets:
 
 extensions:
   avocado-bsp-nuvo-9000:
-    version: 0.1.0
+    version: 0.1.1
     release: r0
     summary: Board support for the Neousys Nuvo-9000 industrial PC
     description: >
@@ -93,7 +93,6 @@ extensions:
       # --- Audio (Intel HD Audio) ---
       kernel-module-snd-hda-intel: '*'
       kernel-module-snd-hda-codec-hdmi: '*'
-      kernel-module-snd-hda-codec-realtek: '*'
 
       # --- Intel GPU driver (iGPU) ---
       kernel-module-i915: '*'
@@ -135,6 +134,16 @@ extensions:
       dmidecode: '*'
       nvme-cli: '*'
       smartmontools: '*'
+
+    # Onboard audio is a Realtek ALC888-VD. 2024 (linux 6.6) ships one realtek
+    # codec module; 6.18 splits it per family, and the ALC888 is in alc882.
+    kernel-6.6.*:
+      packages:
+        kernel-module-snd-hda-codec-realtek: '*'
+
+    kernel-6.18.*:
+      packages:
+        kernel-module-snd-hda-codec-alc882: '*'
 
 sdk:
   image: docker.io/avocadolinux/sdk:{{ env.AVOCADO_DISTRO_RELEASE }}
